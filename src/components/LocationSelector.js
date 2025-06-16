@@ -1,11 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { regions, subterritories, pdvs } from '../mock/locations';
+import SearchBar from './SearchBar';
 
 const LocationSelector = ({ onSelectPdv, selectedChannel }) => {
   const [selectedRegion, setSelectedRegion] = useState('');
   const [selectedSubterritory, setSelectedSubterritory] = useState('');
   const [availableSubterritories, setAvailableSubterritories] = useState([]);
   const [availablePdvs, setAvailablePdvs] = useState([]);
+  const [pdvSearch, setPdvSearch] = useState('');
 
   useEffect(() => {
     if (selectedRegion) {
@@ -26,6 +28,10 @@ const LocationSelector = ({ onSelectPdv, selectedChannel }) => {
       setAvailablePdvs([]);
     }
   }, [selectedSubterritory]);
+
+  const filteredPdvs = availablePdvs.filter((pdv) =>
+    pdv.name.toLowerCase().includes(pdvSearch.toLowerCase())
+  );
 
   return (
     <div className="p-6 bg-white rounded-xl shadow-lg max-w-md mx-auto mt-8">
@@ -66,13 +72,18 @@ const LocationSelector = ({ onSelectPdv, selectedChannel }) => {
       {selectedSubterritory && (
         <div className="mb-6">
           <label htmlFor="pdv-select" className="block text-gray-700 text-sm font-bold mb-2">Punto de Venta (PDV):</label>
+          <SearchBar
+            value={pdvSearch}
+            onChange={setPdvSearch}
+            placeholder="Buscar PDV"
+          />
           <select
             id="pdv-select"
             className="block w-full bg-gray-100 border border-gray-300 text-gray-900 py-2 px-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all duration-200"
             onChange={(e) => onSelectPdv(e.target.value)}
           >
             <option value="">Selecciona un PDV</option>
-            {availablePdvs.map((pdv) => (
+            {filteredPdvs.map((pdv) => (
               <option key={pdv.id} value={pdv.id}>{pdv.name}</option>
             ))}
           </select>
