@@ -53,3 +53,17 @@ export const removeStorageItem = (key) => {
     console.error('Error al remover de localStorage:', error);
   }
 };
+
+// Agrega una solicitud al historial agrupado por canal
+export const addRequestToHistory = (channelId, request) => {
+  try {
+    const history = getStorageItem('requests-history') || {};
+    if (!history[channelId]) {
+      history[channelId] = [];
+    }
+    history[channelId].push(request);
+    setStorageItem('requests-history', history);
+  } catch (error) {
+    console.error('Error al actualizar historial:', error);
+  }
+};

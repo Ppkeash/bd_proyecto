@@ -5,6 +5,7 @@ import LocationSelector from './components/LocationSelector';
 import MaterialRequestForm from './components/MaterialRequestForm';
 import PdvUpdateForm from './components/PdvUpdateForm';
 import ConfirmationMessage from './components/ConfirmationMessage';
+import { addRequestToHistory } from './utils/storage';
 
 const App = () => {
   const [currentPage, setCurrentPage] = useState('home'); // 'home', 'trade-nacional', 'trade-regional', 'channel-select', 'location-select', 'request-material', 'update-pdv', 'confirm-request', 'confirm-update'
@@ -38,12 +39,24 @@ const App = () => {
 
   const handleConfirmRequest = (requestDetails) => {
     console.log('Solicitud de Material Confirmada:', requestDetails);
+    addRequestToHistory(selectedChannelId, {
+      type: 'material',
+      pdvId: selectedPdvId,
+      ...requestDetails,
+      timestamp: Date.now(),
+    });
     setConfirmationMessage('¡Tu solicitud de material ha sido enviada con éxito!');
     setCurrentPage('confirm-request');
   };
 
   const handleUpdateConfirm = (updatedData) => {
     console.log('Datos del PDV Actualizados:', updatedData);
+    addRequestToHistory(selectedChannelId, {
+      type: 'pdv-update',
+      pdvId: selectedPdvId,
+      data: updatedData,
+      timestamp: Date.now(),
+    });
     setConfirmationMessage('¡Los datos del PDV han sido actualizados correctamente!');
     setCurrentPage('confirm-update');
   };

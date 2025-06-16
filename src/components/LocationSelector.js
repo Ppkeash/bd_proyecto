@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { regions, subterritories, pdvs } from '../mock/locations';
+import PreviousRequests from './PreviousRequests';
 
 const LocationSelector = ({ onSelectPdv, selectedChannel }) => {
   const [selectedRegion, setSelectedRegion] = useState('');
@@ -78,6 +79,9 @@ const LocationSelector = ({ onSelectPdv, selectedChannel }) => {
           </select>
         </div>
       )}
+
+      {/* Historial de solicitudes para el canal seleccionado */}
+      <PreviousRequests channelId={selectedChannel} />
     </div>
   );
 };
