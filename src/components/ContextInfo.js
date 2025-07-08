@@ -10,7 +10,7 @@ import { channels } from '../mock/channels';
 const ContextInfo = ({ pdvName, subterritoryName, regionName, channelId }) => {
   const channelName = channels.find((c) => c.id === channelId)?.name || channelId;
   return (
-    <div className="mb-4 bg-tigo-light p-3 rounded-lg text-gray-800 text-sm">
+    <div className="mb-4 bg-tigo-light p-3 rounded-lg text-gray-800 text-sm grid grid-cols-2 gap-x-4 md:grid-cols-1">
       <p className="font-semibold">PDV: {pdvName}</p>
       <p>Subterritorio: {subterritoryName}</p>
       <p>Región: {regionName}</p>

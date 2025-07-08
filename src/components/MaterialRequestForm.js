@@ -125,9 +125,8 @@ const MaterialRequestForm = ({
       <div className="md:col-span-2">
         <h2 className="text-2xl font-semibold text-gray-800 mb-2 text-center">Solicitar Material POP</h2>
 
-        <p className="text-center text-sm text-gray-600 mb-4">
-          PDV: {selectedPdvName} - {selectedSubName} - {selectedRegionName} - Canal: {channelName}
-        </p>
+
+        {/* El contexto se muestra junto al carrito */}
 
         <div className="mb-4">
           <label
@@ -237,7 +236,7 @@ const MaterialRequestForm = ({
       </div>
 
       {/* Sección del Carrito y contexto */}
-      <div className="border-l border-gray-200 pl-8 md:pl-4">
+      <div className="mt-8 md:mt-0 md:border-l border-gray-200 md:pl-4">
         <ContextInfo
           pdvName={selectedPdvName}
           subterritoryName={selectedSubName}
