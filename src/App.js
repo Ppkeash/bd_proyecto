@@ -279,11 +279,13 @@ const App = () => {
         setCurrentPage('pdv-actions');
         break;
       case 'create-campaign':
+        setCurrentPage('channel-select');
+        break;
       case 'manage-campaigns':
         setCurrentPage('campaigns-menu');
         break;
       case 'export-data':
-        setCurrentPage('pdv-actions');
+        setCurrentPage('channel-select');
         break;
       case 'confirm-request':
       case 'confirm-update':
@@ -412,7 +414,10 @@ const App = () => {
 
         {/* Exportar datos */}
         {isLoggedIn && currentPage === 'export-data' && (
-          <ExportData onBack={handleBack} onExport={performExport} />
+          <ExportData
+            onBack={() => setCurrentPage('channel-select')}
+            onExport={performExport}
+          />
         )}
 
         {/* Mensaje de confirmación de acciones */}
