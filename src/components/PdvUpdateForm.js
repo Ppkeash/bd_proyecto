@@ -111,14 +111,12 @@ const PdvUpdateForm = ({ selectedPdvId, onUpdateConfirm }) => {
   const handleSaveField = (fieldName, label) => {
     saveDefaultField(fieldName, label, pdvData[fieldName]);
     setEditingField(null);
-    savePdvDefaults(pdvData);
   };
 
   const handleSaveAdditionalField = (index) => {
     const field = pdvData.additionalFields[index];
     saveDefaultField(`additional-${index}`, field.label, field.value);
     setEditingField(null);
-    savePdvDefaults(pdvData);
   };
 
   const applyDefaultField = (field) => {
