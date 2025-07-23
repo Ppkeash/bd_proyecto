@@ -37,3 +37,14 @@ npm start
 
 La aplicación se iniciará en modo de desarrollo. A partir de este punto se pueden adaptar las funciones indicadas para conectarse a los servicios que provea el backend.
 
+
+## Launcher offline de TECNILAND Nexus
+
+Se agreg\u00f3 un launcher b\u00e1sico para Minecraft. Para utilizarlo:
+
+1. Ejecuta `npm run server` para levantar el servicio local que lanza el juego.
+2. En otra consola ejecuta `npm start` para iniciar la interfaz web.
+3. Ingresa un nombre de usuario y presiona **Iniciar sesi\u00f3n**. El nombre se guardar\u00e1 en `localStorage`.
+4. Selecciona la versi\u00f3n deseada y pulsa **JUGAR**. El servidor abrir\u00e1 Minecraft con el nombre indicado.
+
+El servidor utiliza `minecraft-launcher-core` en modo offline, por lo que no se requiere autenticaci\u00f3n en l\u00ednea.

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 
 /**
  * Componente principal de la aplicación.
@@ -26,15 +26,28 @@ import CampaignsMenu from './components/CampaignsMenu';
 import CreateCampaignForm from './components/CreateCampaignForm';
 import ManageCampaigns from './components/ManageCampaigns';
 import ExportData from './components/ExportData';
-import LoginScreen from './components/LoginScreen';
+import OfflineLogin from './components/OfflineLogin';
+import LauncherHome from './components/LauncherHome';
 import ChannelMenu from './components/ChannelMenu';
 import Sidebar from './components/Sidebar';
-import { getStorageItem, setStorageItem } from './utils/storage';
+import { getStorageItem, setStorageItem, removeStorageItem } from './utils/storage';
 import { channels } from './mock/channels';
 
 const App = () => {
   // Controla si el usuario ha iniciado sesión
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  // Nombre del usuario activo almacenado localmente
+  const [username, setUsername] = useState('');
+
+  // Al cargar la aplicación verificamos si existe un usuario almacenado
+  useEffect(() => {
+    const stored = getStorageItem('mc_username');
+    if (stored) {
+      setUsername(stored);
+      setIsLoggedIn(true);
+      setCurrentPage('launcher');
+    }
+  }, []);
 
   // Página o vista que se está mostrando actualmente
   // (home, selección de canal, formulario, etc.)
@@ -123,6 +136,19 @@ const App = () => {
     setCurrentPage('create-campaign');
   };
 
+  // Envía la petición al servidor para lanzar Minecraft
+  const handlePlay = async (version) => {
+    try {
+      await fetch('http://localhost:3001/play', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ username, version })
+      });
+    } catch (err) {
+      console.error('Error al iniciar el juego:', err);
+    }
+  };
+
   // Exporta información de solicitudes y actualizaciones filtrando por canal,
   // puntos de venta y materiales. Se utiliza desde la pantalla de Export Data.
   const performExport = ({ channelId, pdvIds = [], materialIds = [] }) => {
@@ -197,15 +223,19 @@ const App = () => {
   };
 
   // Al iniciar sesión correctamente mostramos la página principal
-  const handleLogin = () => {
+  // Guarda el nombre ingresado y muestra la pantalla del launcher
+  const handleLogin = (name) => {
+    setUsername(name);
     setIsLoggedIn(true);
-    setCurrentPage('home');
+    setCurrentPage('launcher');
   };
 
   // Cerrar sesión y volver al login
   const handleLogout = () => {
     handleGoHome();
     setIsLoggedIn(false);
+    setUsername('');
+    removeStorageItem('mc_username');
     setCurrentPage('login');
   };
 
@@ -214,6 +244,8 @@ const App = () => {
     switch (currentPage) {
       case 'login':
         return 'Inicio de Sesión';
+      case 'launcher':
+        return 'TECNILAND Nexus';
       case 'home':
         return 'Base de Destinatarios';
       case 'trade-nacional':
@@ -300,13 +332,13 @@ const App = () => {
     <div className="min-h-screen bg-tigo-light flex flex-col">
       <LayoutHeader
         title={getHeaderTitle()}
-        onLogoClick={isLoggedIn ? handleGoHome : null}
-        onBack={isLoggedIn && currentPage !== 'home' ? handleBack : null}
+        onLogoClick={isLoggedIn && currentPage !== 'launcher' ? handleGoHome : null}
+        onBack={isLoggedIn && currentPage !== 'home' && currentPage !== 'launcher' ? handleBack : null}
         onLogout={isLoggedIn ? handleLogout : null}
       />
 
       <div className="flex flex-grow">
-        {isLoggedIn && currentPage !== 'login' && (
+        {isLoggedIn && currentPage !== 'login' && currentPage !== 'launcher' && (
           <Sidebar
             onHome={handleGoHome}
             onChannels={() => setCurrentPage('channel-select')}
@@ -319,7 +351,11 @@ const App = () => {
 
         <main className="flex-grow p-4 flex items-center justify-center">
         {!isLoggedIn && (
-          <LoginScreen onLogin={handleLogin} />
+          <OfflineLogin onLogin={handleLogin} />
+        )}
+
+        {isLoggedIn && currentPage === 'launcher' && (
+          <LauncherHome username={username} onPlay={handlePlay} />
         )}
 
         {/* Vista de inicio con selección de tipo de trade */}
